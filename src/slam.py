@@ -15,6 +15,7 @@ torch.set_grad_enabled(False);
 
 
 def callback(data):
+    print("call")
     # load images
     image0 = load_image('/work/repos/LightGlue/assets/DSC_0410.JPG')
     image1 = load_image('/work/repos/LightGlue/assets/DSC_0410.JPG')
@@ -38,14 +39,15 @@ def callback(data):
     
 def listener():
     rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("chatter", String, callback)
-
+    rospy.Subscriber("/chatter", String, callback)
+    print("in node")
     rospy.spin()
 
 if __name__ == '__main__':
+    print("in main")
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 'mps', 'cpu'
-    extractor = SuperPoint(max_num_keypoints=2048).eval().to(device)  # load the extractor
+    extractor = SuperPoint(max_num_keypoints=512).eval().to(device)  # load the extractor
     matcher = LightGlue(features='superpoint').eval().to(device)
 
     listener()
